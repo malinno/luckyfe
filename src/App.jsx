@@ -33,9 +33,10 @@ const App = () => {
     setSelectedPrize(null);
 
     axios
-      .get("http://localhost:3000/gifts") // Replace this URL with your API endpoint
+      .get("http://localhost:3000/api/spinwheels") // Replace this URL with your API endpoint
       .then((response) => {
         setLoading(false);
+        console.log("API Response:", response.data);
         // Check if the response data exists and is an array
         if (Array.isArray(response.data) && response.data.length > 0) {
           // Select a random item from the response data
@@ -116,6 +117,7 @@ const App = () => {
               </div>
             </div>
           </div>
+          {/* <div className="mt-3 text-[20px]"> lượt {data.spin_count} </div> */}
           <button
             onClick={handleSpinClick}
             disabled={isWheelSpinning}
@@ -144,37 +146,40 @@ const App = () => {
       <Modal
   isOpen={showModal}
   onRequestClose={closeModal}
-  
   style={{
     overlay: {
-      margin:'10%',
-      right:"200px",
-      // display: "flex",
+      margin: "10%",
+      right: "200px",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "rgba(255, 255, 255, 0.1)", // Màu nền trắng với độ mờ 0.75
-      height: "30%", // Chiều cao của overlay bằng chiều cao của màn hình
-      zIndex: 1000, // Đảm bảo modal hiển thị trên các phần tử khác
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      height: "30%",
+      zIndex: 1000,
     },
     content: {
       width: "20%",
       borderRadius: "8px",
-      backgroundColor:"rgba(91,165,35,1)",
-      alignItems:"center",
-      justifyContent:'center',
-      textAlign:'center',
-      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)", // Đổ bóng cho modal
+      backgroundColor: "rgba(91, 165, 35, 1)",
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
     },
   }}
 >
   <h2>Chúc Mừng Bạn</h2>
-  {data && data.name ? (
-    <p>Đã thắng: {data.name}</p>
+  {data && data.options && data.options.length > 0 ? (
+    data.options.map((option) => (
+      <p key={option._id}>
+        {option.prizes ? `Đã thắng: ${option.prizes}` : "Quay bánh xe để nhận giải thưởng!"}
+      </p>
+    ))
   ) : (
-    <p>Quay bánh xe để nhận giải thưởng!</p>
+    <p>Không có dữ liệu phần thưởng.</p>
   )}
   <button onClick={closeModal} className="bg-red-600 rounded-md w-20 text-sm font-semibold my-7">Đóng</button>
 </Modal>
+
 
 
     </div>
